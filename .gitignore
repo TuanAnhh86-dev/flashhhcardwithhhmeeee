@@ -1,0 +1,5 @@
+node_modules/
+playwright/
+.env
+.env.*
+!.env.example

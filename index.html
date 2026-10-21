@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111310">
+  <title>Flashcards · LCMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="flashcards.css?v=20261021-tun-png-color1">
+  <script src="flashcards.js?v=20261021-tun-png-color1" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="flashcards.html"><span class="brand-mark">L</span><span>LCMS <i>/</i> FLASHCARDS</span></a>
+      <div class="top-actions">
+        <span class="local-note"><i></i> Tiến độ lưu trên máy</span>
+        <button class="quiet-button" id="choose-data" type="button">Chọn dữ liệu</button>
+        <input id="folder-picker" type="file" webkitdirectory multiple hidden>
+      </div>
+    </header>
+
+    <main>
+      <div class="page-heading">
+        <div>
+          <p class="overline">BỘ THẺ CỦA BẠN</p>
+          <h1>Ôn tập</h1>
+          <p class="subtitle" id="deck-subtitle">Đang tải câu hỏi…</p>
+        </div>
+        <div class="heading-tools">
+          <button class="quiet-button iq-test-launch" id="start-iq-test" type="button" title="Chọn phạm vi Test IQ">Test IQ</button>
+          <button class="quiet-button" id="export-csv" type="button">Tải CSV</button>
+          <button class="icon-button" id="restart-session" type="button" title="Về thẻ đầu">↺</button>
+          <button class="icon-button" id="fullscreen-toggle" type="button" title="Chế độ tập trung">⛶</button>
+        </div>
+      </div>
+
+      <section class="filters" aria-label="Lọc thẻ">
+        <label><span>Đề</span><select id="exam-filter"><option value="all">Cả hai đề</option><option value="1">Đề 1</option><option value="2">Đề 2</option></select></label>
+        <label><span>Phần thi</span><select id="part-filter"><option value="all">Tất cả phần</option></select></label>
+        <label class="search-field"><span>Tìm câu</span><input id="search-input" type="search" placeholder="Số câu hoặc từ khóa"></label>
+        <button class="shuffle-button" id="shuffle-toggle" type="button" aria-pressed="false"><span>⤨</span> Trộn thẻ</button>
+      </section>
+
+      <div class="status-row" role="group" aria-label="Lọc và đặt lại trạng thái thẻ">
+        <button class="status-option active" data-status="all" type="button">Tất cả <small id="count-all">—</small></button>
+        <button class="status-option" data-status="new" type="button">Chưa học <small id="count-new">—</small></button>
+        <button class="status-option" data-status="review" type="button">Chưa nhớ <small id="count-review">—</small></button>
+        <button class="status-option" data-status="known" type="button">Đã nhớ <small id="count-known">—</small></button>
+        <button class="quiet-button reset-status-button" id="reset-statuses" type="button" title="Đặt trạng thái của tất cả thẻ về Chưa học">↺ Reset trạng thái</button>
+        <span class="data-status" id="data-status" role="status">Đang tải dữ liệu…</span>
+      </div>
+
+      <section class="study-layout" id="study-layout">
+        <section class="study-area" aria-label="Flashcard">
+          <div class="card-progress">
+            <div class="progress-labels"><span id="deck-title">Đang tải bộ thẻ</span><span id="card-position">0 / 0</span></div>
+            <div class="progress-track"><i id="progress-fill"></i></div>
+            <span class="visually-hidden" id="progress-percent">0%</span>
+          </div>
+
+          <div class="card-stage" id="card-stage">
+            <div class="loading-state" id="loading-state"><span class="spinner"></span><p>Đang nạp thẻ…</p></div>
+            <article class="flashcard" id="flashcard" hidden>
+              <div class="flashcard-inner" id="flashcard-inner">
+                <section class="card-face card-front" id="card-front" aria-label="Mặt trước">
+                  <div class="audio-host" id="front-audio-host"></div>
+                  <div class="face-heading"><span class="face-label"><i></i> CÂU HỎI</span><span class="card-type" id="front-type">QUESTION</span></div>
+                  <div class="card-main" id="front-content"></div>
+                  <div class="face-foot"><span>Thử tự trả lời trước khi lật.</span><span class="face-mark">01</span></div>
+                </section>
+                <section class="card-face card-back" id="card-back" aria-label="Mặt sau" aria-hidden="true">
+                  <div class="audio-host" id="back-audio-host"></div>
+                  <div class="face-heading"><span class="face-label"><i></i> ĐÁP ÁN</span><span class="card-type">ANSWER</span></div>
+                  <div class="card-main" id="back-content"></div>
+                  <div class="face-foot"><span>Ghi nhớ cụm từ và ngữ cảnh.</span><span class="face-mark">02</span></div>
+                </section>
+              </div>
+            </article>
+            <div class="empty-state" id="empty-state" hidden>
+              <h2>Không có thẻ phù hợp</h2><p>Thử đổi bộ lọc hoặc trạng thái thẻ.</p>
+              <button class="quiet-button" id="clear-filters" type="button">Hiện tất cả thẻ</button>
+            </div>
+          </div>
+
+          <div class="card-actions" id="card-controls" hidden>
+            <button class="rate-button" id="mark-review" type="button"><span>Chưa nhớ</span><kbd>&larr;</kbd></button>
+            <button class="flip-button" id="flip-card" type="button">Lật thẻ <kbd>Space / &uarr; / &darr;</kbd></button>
+            <button class="rate-button" id="mark-known" type="button"><span>Đã nhớ</span><kbd>&rarr;</kbd></button>
+          </div>
+          <nav class="card-navigation" aria-label="Điều hướng thẻ">
+            <button class="nav-button" id="previous-card" type="button">Trước</button>
+            <span class="nav-hint">Space / ↑ / ↓ lật · ← Chưa nhớ · → Đã nhớ</span>
+            <button class="nav-button" id="next-card" type="button">Tiếp</button>
+          </nav>
+        </section>
+      </section>
+      <footer class="page-footer"><span id="keyboard-help">Flop quá thì ghi tên Tún vào</span><button class="footer-prank-button" id="audio-warning-button" type="button">Khongggg duoccc nhann</button></footer>
+    </main>
+  </div>
+  <dialog class="tun-image-dialog" id="tun-image-dialog" aria-labelledby="tun-image-title">
+    <header class="tun-image-dialog-header">
+      <h2 id="tun-image-title">Lói rồi mà...</h2>
+      <form method="dialog"><button class="transcript-dialog-close" type="submit" aria-label="Đóng">×</button></form>
+    </header>
+    <img src="flop-tun.png" alt="Hai nhân vật hoạt hình ôm nhau và hôn nhau, vẽ bằng nét đen trên nền trắng">
+  </dialog>
+  <div class="visually-hidden" aria-hidden="true">
+    <span id="stat-total"></span><span id="stat-review"></span><span id="stat-known"></span><span id="stat-new"></span>
+  </div>
+  <dialog class="transcript-dialog" id="transcript-dialog" aria-labelledby="transcript-dialog-title">
+    <div class="transcript-dialog-header">
+      <div><p class="transcript-dialog-kicker">LISTENING SCRIPT</p><h2 id="transcript-dialog-title">Script & bản dịch</h2></div>
+      <form method="dialog"><button class="transcript-dialog-close" type="submit" aria-label="Đóng">×</button></form>
+    </div>
+    <div class="transcript-dialog-content">
+      <section class="transcript-dialog-section" aria-labelledby="transcript-english-label">
+        <h3 id="transcript-english-label">TRANSCRIPT · ENGLISH</h3><p id="transcript-english"></p>
+      </section>
+      <section class="transcript-dialog-section" aria-labelledby="transcript-vietnamese-label">
+        <h3 id="transcript-vietnamese-label">BẢN DỊCH · TIẾNG VIỆT</h3><p id="transcript-vietnamese"></p>
+      </section>
+    </div>
+  </dialog>
+  <dialog class="completion-dialog" id="completion-dialog" aria-labelledby="completion-title">
+    <div class="completion-content">
+      <header class="completion-header">
+        <div><p class="completion-kicker">HOÀN THÀNH BỘ THẺ</p><h2 id="completion-title">Hoàn thành 400 câu!</h2></div>
+        <form method="dialog"><button class="transcript-dialog-close" type="submit" aria-label="Đóng">×</button></form>
+      </header>
+      <p class="completion-summary" id="completion-summary">Tổng kết trạng thái hiện tại của bộ thẻ.</p>
+      <table class="completion-table">
+        <thead><tr><th>Trạng thái</th><th>Số thẻ</th><th>Tỷ lệ</th></tr></thead>
+        <tbody id="completion-status-body"></tbody>
+      </table>
+      <div class="completion-actions"><button class="completion-iq-launch" id="completion-iq-launch" type="button" title="Phạm vi lấy câu theo bộ lọc Đề">Test IQ</button><button class="completion-restart" id="completion-restart" type="button">Ôn lại từ câu 1</button></div>
+    </div>
+    <div class="confetti-layer" id="completion-confetti" aria-hidden="true"></div>
+  </dialog>
+  <dialog class="iq-test-dialog" id="iq-test-dialog" aria-labelledby="iq-test-setup-title">
+    <section class="iq-test-content iq-test-setup-view" id="iq-test-setup-view">
+      <header class="iq-test-header">
+        <div><p class="iq-test-kicker">CHỌN PHẠM VI BÀI TEST</p><h2 id="iq-test-setup-title">Test IQ</h2></div>
+        <form method="dialog"><button class="transcript-dialog-close" type="submit" aria-label="Đóng">×</button></form>
+      </header>
+      <p class="iq-test-setup-copy">Chọn bộ câu hỏi để rút ngẫu nhiên 15 câu.</p>
+      <div class="iq-test-scope-options">
+        <button class="iq-test-scope-choice" type="button" data-iq-test-scope="all"><strong>Cả hai đề</strong><span>Rút từ 400 câu của cả đề 1 và đề 2</span></button>
+        <button class="iq-test-scope-choice" type="button" data-iq-test-scope="1"><strong>Đề 1</strong><span>Chỉ rút câu trong 200 câu đề 1</span></button>
+        <button class="iq-test-scope-choice" type="button" data-iq-test-scope="2"><strong>Đề 2</strong><span>Chỉ rút câu trong 200 câu đề 2</span></button>
+      </div>
+    </section>
+    <section class="iq-test-content iq-test-question-view" id="iq-test-question-view">
+      <header class="iq-test-header">
+        <div><p class="iq-test-kicker" id="iq-test-scope-label">15 CÂU NGẪU NHIÊN · CẢ HAI ĐỀ</p><h2 id="iq-test-title">Test IQ</h2></div>
+        <form method="dialog"><button class="transcript-dialog-close" type="submit" aria-label="Đóng">×</button></form>
+      </header>
+      <div class="iq-test-progress"><span id="iq-test-position">Câu 1 / 15</span><span id="iq-test-progress-label">0% đã làm</span></div>
+      <div class="iq-test-progress-track"><i id="iq-test-progress-fill"></i></div>
+      <div class="iq-test-question-body" id="iq-test-question-body"></div>
+      <div class="iq-test-navigation">
+        <button class="iq-test-secondary" id="iq-test-previous" type="button">Câu trước</button>
+        <button class="iq-test-primary" id="iq-test-next" type="button" disabled>Câu tiếp</button>
+      </div>
+    </section>
+    <section class="iq-test-content iq-test-results-view" id="iq-test-results-view" hidden>
+      <header class="iq-test-header">
+        <div><p class="iq-test-kicker">KẾT QUẢ BÀI TEST</p><h2 id="iq-result-title">Bạn đạt 0 / 15 câu</h2></div>
+        <form method="dialog"><button class="transcript-dialog-close" type="submit" aria-label="Đóng">×</button></form>
+      </header>
+      <p class="iq-result-summary" id="iq-result-summary"></p>
+      <div class="iq-result-table-wrap">
+        <table class="iq-result-table">
+          <thead><tr><th>#</th><th>Câu hỏi</th><th>Bạn chọn</th><th>Đáp án đúng</th><th>Kết quả</th></tr></thead>
+          <tbody id="iq-result-body"></tbody>
+        </table>
+      </div>
+      <div class="iq-result-actions">
+        <button class="iq-test-secondary" id="iq-test-review" type="button">Ôn lại</button>
+        <button class="iq-test-primary" id="iq-test-retry" type="button">Test lại</button>
+      </div>
+    </section>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
