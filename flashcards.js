@@ -4,6 +4,7 @@
   const DEFAULT_DATA_DIR = './lcms-flashcards-2026-10-21T07-39-10Z/';
   const PROGRESS_PREFIX = 'lcms-flashcards-progress-v1:';
   const SESSION_PREFIX = 'lcms-flashcards-session-v1:';
+  const IQ_STREAK_KEY = 'lcms-flashcards-iq-streak-v1';
   const PART_NAMES = ['Photographs', 'Question-Response', 'Conversations', 'Talks', 'Incomplete Sentences', 'Text Completion', 'Reading Comprehension'];
   const PART_RANGES = [[1, 6], [7, 31], [32, 70], [71, 100], [101, 130], [131, 146], [147, 200]];
   const ui = Object.fromEntries([
@@ -16,7 +17,7 @@
     'mark-known','restart-session','fullscreen-toggle','study-layout','clear-filters','toast',
     'transcript-dialog','transcript-english','transcript-vietnamese','tun-image-dialog','audio-warning-button','completion-dialog',
     'completion-title','completion-summary','completion-status-body','completion-confetti','completion-restart','completion-iq-launch',
-    'start-iq-test','review-unlearned','iq-test-dialog','iq-test-setup-view','iq-test-setup-title','iq-test-question-view','iq-test-results-view','iq-test-scope-label','iq-test-position',
+    'start-iq-test','review-unlearned','iq-streak-meter','iq-streak-count','iq-streak-fill','iq-test-dialog','iq-test-setup-view','iq-test-setup-title','iq-test-question-view','iq-test-results-view','iq-test-scope-label','iq-test-position',
     'iq-test-progress-label','iq-test-progress-fill','iq-test-question-body','iq-test-previous','iq-test-next',
     'iq-result-title','iq-result-summary','iq-result-body','iq-test-review','iq-test-retry',
   ].map(id => [id, document.getElementById(id)]));
@@ -36,6 +37,7 @@
   let iqTest = null;
   let iqReviewSubset = null;
   let previousIqTestKeys = '';
+  let iqStreakCount = loadIqStreak();
   let toastTimer;
 
   function decodeHtmlEntities(value) {
@@ -69,6 +71,47 @@
   }
 
   function questionKey(card) { return `${card.exam}-${card.question}`; }
+
+  function loadIqStreak() {
+    try {
+      const stored = Number.parseInt(localStorage.getItem(IQ_STREAK_KEY) || '0', 10);
+      return Number.isFinite(stored) ? Math.max(0, stored) : 0;
+    } catch { return 0; }
+  }
+
+  function saveIqStreak() {
+    try {
+      localStorage.setItem(IQ_STREAK_KEY, String(iqStreakCount));
+      return true;
+    } catch { return false; }
+  }
+
+  function updateIqStreakMeter(celebrate = false) {
+    const meter = ui['iq-streak-meter'];
+    if (!meter) return;
+    const tiers = ['green', 'yellow', 'red', 'purple', 'blue'];
+    const tierIndex = Math.floor(iqStreakCount / 10) % tiers.length;
+    const progress = (iqStreakCount % 10) * 10;
+    const toNextColor = 10 - (iqStreakCount % 10);
+    const flameScale = 1 + Math.min(iqStreakCount, 100) * 0.009;
+    ui['iq-streak-count'].textContent = String(iqStreakCount);
+    ui['iq-streak-fill'].style.width = `${progress}%`;
+    meter.dataset.tier = tiers[tierIndex];
+    meter.style.setProperty('--flame-scale', flameScale.toFixed(2));
+    meter.style.setProperty('--flame-burst-scale', (flameScale * 1.3).toFixed(2));
+    meter.style.setProperty('--flame-rebound-scale', (flameScale * 1.13).toFixed(2));
+    meter.style.setProperty('--spark-scale', (0.65 + Math.min(1, iqStreakCount / 50) * 0.55).toFixed(2));
+    meter.style.setProperty('--flame-intensity', Math.min(1, iqStreakCount / 50).toFixed(2));
+    meter.style.setProperty('--flame-blur', `${(4 + Math.min(iqStreakCount, 50) * 0.1).toFixed(1)}px`);
+    meter.setAttribute('aria-label', `Test IQ đạt 100% liên tiếp: ${iqStreakCount}. Còn ${toNextColor} lần đạt 100% để đổi màu lửa.`);
+    meter.title = `${iqStreakCount} lần đạt 100% liên tiếp · Bài dưới 100% sẽ ngắt streak · Còn ${toNextColor} lần đạt 100% để đổi màu lửa.`;
+    if (celebrate) {
+      meter.classList.remove('is-celebrating');
+      void meter.offsetWidth;
+      meter.classList.add('is-celebrating');
+      setTimeout(() => meter.classList.remove('is-celebrating'), 900);
+    }
+  }
 
   function loadProgress() {
     try { progress = JSON.parse(localStorage.getItem(PROGRESS_PREFIX + activeDatasetId) || '{}'); }
@@ -781,7 +824,7 @@
       if (signature !== previousIqTestKeys) break;
     }
     previousIqTestKeys = signature;
-    iqTest = { questions: selected, answers: {}, index: 0, examScope };
+    iqTest = { questions: selected, answers: {}, index: 0, examScope, resultProcessed: false, streakResult: null };
     for (const audio of [...ui['front-audio-host'].querySelectorAll('audio'), ...ui['back-audio-host'].querySelectorAll('audio')]) audio.pause();
     ui['iq-test-dialog'].setAttribute('aria-labelledby', 'iq-test-title');
     ui['iq-test-scope-label'].textContent = `15 CÂU NGẪU NHIÊN · ${examScope === 'all' ? 'CẢ HAI ĐỀ' : `ĐỀ ${examScope}`}`;
@@ -894,9 +937,29 @@
   function renderIqResults() {
     if (!iqTest) return;
     const score = iqTest.questions.reduce((total, item) => total + (iqTest.answers[questionKey(item.card)] === item.answer.key ? 1 : 0), 0);
+    if (!iqTest.resultProcessed) {
+      const previousStreak = iqStreakCount;
+      const perfect = score === iqTest.questions.length;
+      iqStreakCount = perfect ? iqStreakCount + 1 : 0;
+      const saved = saveIqStreak();
+      iqTest.resultProcessed = true;
+      iqTest.streakResult = { perfect, previousStreak, saved };
+      updateIqStreakMeter(perfect);
+      if (perfect) showToast(`Hoàn hảo! Bạn đạt 100% · Chuỗi ${iqStreakCount} 🔥`);
+      else if (previousStreak > 0) showToast('Chuỗi hoàn hảo đã về 0. Làm đúng 100% để bắt đầu lại.');
+    }
     ui['iq-result-title'].textContent = `Bạn đạt ${score} / ${iqTest.questions.length} câu`;
     const scopeLabel = iqTest.examScope === 'all' ? 'cả hai đề' : `đề ${iqTest.examScope}`;
-    ui['iq-result-summary'].textContent = `Đúng ${Math.round(score / iqTest.questions.length * 100)}% · 15 câu được rút từ ${scopeLabel}.`;
+    const percentage = Math.round(score / iqTest.questions.length * 100);
+    let summary = `Đúng ${percentage}% · 15 câu được rút từ ${scopeLabel}.`;
+    if (iqTest.streakResult?.perfect) {
+      summary += ` Chuỗi hoàn hảo: ${iqStreakCount} 🔥${iqTest.streakResult.saved ? '' : ' · Trình duyệt không lưu được chuỗi này.'}`;
+    } else if (iqTest.streakResult?.previousStreak > 0) {
+      summary += ' Chuỗi hoàn hảo đã bị ngắt; hãy đạt 100% để gây dựng lại.';
+    } else {
+      summary += ' Đạt 100% để bắt đầu chuỗi hoàn hảo.';
+    }
+    ui['iq-result-summary'].textContent = summary;
     ui['iq-result-body'].replaceChildren(...iqTest.questions.map((item, index) => {
       const { card, options, answer } = item;
       const selectedKey = iqTest.answers[questionKey(card)] || '';
@@ -988,6 +1051,13 @@
   }
 
   function initEvents() {
+    updateIqStreakMeter();
+    window.addEventListener('storage', event => {
+      if (event.key !== IQ_STREAK_KEY) return;
+      const stored = Number.parseInt(event.newValue || '0', 10);
+      iqStreakCount = Number.isFinite(stored) ? Math.max(0, stored) : 0;
+      updateIqStreakMeter();
+    });
     ui['choose-data'].addEventListener('click', () => ui['folder-picker'].click());
     ui['audio-warning-button'].addEventListener('click', () => ui['tun-image-dialog'].showModal());
     ui['tun-image-dialog'].addEventListener('click', event => {

@@ -8,13 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="flashcards.css?v=20261022-webp-cache1">
+  <link rel="stylesheet" href="flashcards.css?v=20261022-iq-streak1">
   <script>
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-      navigator.serviceWorker.register('./service-worker.js?v=20261022-webp-cache1').catch(() => {});
+      navigator.serviceWorker.register('./service-worker.js?v=20261022-iq-streak1').catch(() => {});
     }
   </script>
-  <script src="flashcards.js?v=20261022-webp-cache1" defer></script>
+  <script src="flashcards.js?v=20261022-iq-streak1" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -34,12 +34,18 @@
           <h1>Ôn tập</h1>
           <p class="subtitle" id="deck-subtitle">Đang tải câu hỏi…</p>
         </div>
-        <div class="heading-tools">
-          <button class="quiet-button iq-test-launch" id="start-iq-test" type="button" title="Chọn phạm vi Test IQ">Test IQ</button>
-          <button class="quiet-button review-unlearned-launch" id="review-unlearned" type="button" title="Ôn lại các thẻ đã đánh dấu Chưa nhớ">Ôn thẻ chưa nhớ</button>
-          <button class="quiet-button" id="export-csv" type="button">Tải CSV</button>
-          <button class="icon-button" id="restart-session" type="button" title="Về thẻ đầu">↺</button>
-          <button class="icon-button" id="fullscreen-toggle" type="button" title="Chế độ tập trung">⛶</button>
+        <div class="heading-tool-stack">
+          <div class="streak-meter" id="iq-streak-meter" data-tier="green" role="status" aria-live="polite" aria-label="Test IQ đạt 100% liên tiếp: 0" title="Đạt 100% để tăng bộ đếm. Màu lửa đổi sau mỗi 10 lần.">
+            <span class="streak-flame" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path class="streak-flame-outer" d="M17.6 2c.6 4.8-1.4 7.4-4.7 10.2C10.3 8.8 9.3 6.1 9.7 3.4 5.1 8 3 12 3 17.4 3 24 7.8 29 14 29s11-4.8 11-11.2C25 11.5 22.8 6.1 17.6 2Z"/><path class="streak-flame-inner" d="M14.2 16.5c2.5-1.8 3.6-3.5 3.4-5.8 2.4 2.4 3.7 4.5 3.7 7 0 3.2-2.1 5.5-5.3 5.5-2.8 0-4.9-2.1-4.9-4.9 0-1.9 1-3.5 3.1-5.2Z"/></svg></span>
+            <span class="streak-copy"><span class="streak-copy-top"><small>Có trình 0 ?</small><strong id="iq-streak-count">0</strong></span><span class="streak-track" aria-hidden="true"><i id="iq-streak-fill"></i></span></span>
+          </div>
+          <div class="heading-tools">
+            <button class="quiet-button iq-test-launch" id="start-iq-test" type="button" title="Chọn phạm vi Test IQ">Test IQ</button>
+            <button class="quiet-button review-unlearned-launch" id="review-unlearned" type="button" title="Ôn lại các thẻ đã đánh dấu Chưa nhớ">Ôn thẻ chưa nhớ</button>
+            <button class="quiet-button" id="export-csv" type="button">Tải CSV</button>
+            <button class="icon-button" id="restart-session" type="button" title="Về thẻ đầu">↺</button>
+            <button class="icon-button" id="fullscreen-toggle" type="button" title="Chế độ tập trung">⛶</button>
+          </div>
         </div>
       </div>
 
