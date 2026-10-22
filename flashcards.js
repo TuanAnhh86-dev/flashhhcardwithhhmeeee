@@ -1040,7 +1040,7 @@
     ui['fullscreen-toggle'].addEventListener('click', () => {
       setFocusMode(!ui['study-layout'].classList.contains('fullscreen-mode'));
     });
-    ui['review-unlearned'].addEventListener('click', () => {
+    ui['review-unlearned']?.addEventListener('click', () => {
       const reviewCount = records.filter(card => statusOf(card) === 'review').length;
       if (!reviewCount) {
         showToast('Ch\u01b0a c\u00f3 th\u1ebb n\u00e0o \u0111\u01b0\u1ee3c \u0111\u00e1nh d\u1ea5u Ch\u01b0a nh\u1edb.');
