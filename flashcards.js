@@ -304,7 +304,13 @@
         const source = `${DEFAULT_DATA_DIR}exam-${String(exam).padStart(2, '0')}/questions.json`;
         const response = await fetch(source, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Không mở được ${source} (${response.status})`);
-        return { exam, rows: await response.json(), source };
+        const rows = await response.clone().json();
+        if ('caches' in window) {
+          caches.open('lcms-flashcards-offline-v1')
+            .then(cache => cache.put(new URL(source, location.href).href, response.clone()))
+            .catch(() => {});
+        }
+        return { exam, rows, source };
       }));
       dataBaseUrl = new URL(DEFAULT_DATA_DIR, location.href).href;
       folderFiles = null;
@@ -519,7 +525,13 @@
       const element = asset.kind === 'video' ? document.createElement('video') : document.createElement('img');
       element.src = src;
       element.alt = asset.alt || `Đề ${card.exam}, câu ${card.question}`;
-      if (element.tagName === 'VIDEO') { element.controls = true; element.preload = 'metadata'; }
+      if (element.tagName === 'VIDEO') {
+        element.controls = true;
+        element.preload = 'metadata';
+      } else {
+        element.decoding = 'async';
+        element.fetchPriority = 'high';
+      }
       stack.append(element);
     }
     return stack;

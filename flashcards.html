@@ -8,8 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="flashcards.css?v=20261021-review-unlearned1">
-  <script src="flashcards.js?v=20261021-review-unlearned1" defer></script>
+  <link rel="stylesheet" href="flashcards.css?v=20261022-webp-cache1">
+  <script>
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      navigator.serviceWorker.register('./service-worker.js?v=20261022-webp-cache1').catch(() => {});
+    }
+  </script>
+  <script src="flashcards.js?v=20261022-webp-cache1" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -106,7 +111,7 @@
       <h2 id="tun-image-title">Lói rồi mà...</h2>
       <form method="dialog"><button class="transcript-dialog-close" type="submit" aria-label="Đóng">×</button></form>
     </header>
-    <img src="flop-tun.png" alt="Hai nhân vật hoạt hình ôm nhau và hôn nhau, vẽ bằng nét đen trên nền trắng">
+    <img src="flop-tun.webp" alt="Hai nhân vật hoạt hình ôm nhau và hôn nhau, vẽ bằng nét đen trên nền trắng">
   </dialog>
   <div class="visually-hidden" aria-hidden="true">
     <span id="stat-total"></span><span id="stat-review"></span><span id="stat-known"></span><span id="stat-new"></span>

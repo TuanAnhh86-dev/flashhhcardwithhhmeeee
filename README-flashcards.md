@@ -16,6 +16,7 @@
 - Khi đi tiếp sau thẻ cuối của cả hai đề, hoặc sau câu 200 của đề đang lọc riêng, ứng dụng hiện bảng tổng kết **Đã nhớ / Chưa nhớ / Chưa học** cho phạm vi vừa hoàn thành kèm hiệu ứng pháo hoa.
 - Đáp án bạn sửa cũng chỉ lưu trong bộ nhớ cục bộ trên trình duyệt hiện tại; chúng không tự ghi vào `questions.json` hay theo cùng khi deploy sang máy/trình duyệt khác.
 - Bấm nút **Play** ở thanh audio phía trên để nghe; thao tác phát/dừng không lật thẻ. Với câu có ảnh, ảnh nằm bên trái và nội dung/đáp án bên phải.
+- Ảnh đề được nén sang WebP. Ứng dụng lưu các ảnh đã tải cùng giao diện và câu hỏi vào bộ nhớ trình duyệt; nếu mạng rớt, ảnh đã mở trước đó vẫn dùng được. Bộ nhớ này hoạt động trên localhost hoặc HTTPS sau lần mở có mạng đầu tiên.
 - Với câu nghe Part 1–4, bấm **Show trans** cạnh thanh audio để mở script tiếng Anh và bản dịch tiếng Việt. Cả hai cũng được đưa vào CSV xuất từ các thẻ đang lọc.
 - Nhấn đúp vào ảnh để bật hoặc tắt toàn màn hình; nhấn `Esc` để thoát.
 - Tải các thẻ đang lọc về CSV.
