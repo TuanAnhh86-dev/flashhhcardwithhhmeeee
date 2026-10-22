@@ -90,9 +90,9 @@
     const meter = ui['iq-streak-meter'];
     if (!meter) return;
     const tiers = ['green', 'yellow', 'red', 'purple', 'blue'];
-    const tierIndex = Math.floor(iqStreakCount / 10) % tiers.length;
-    const progress = (iqStreakCount % 10) * 10;
-    const toNextColor = 10 - (iqStreakCount % 10);
+    const tierIndex = Math.floor(iqStreakCount / 5) % tiers.length;
+    const progress = (iqStreakCount % 5) * 20;
+    const toNextColor = 5 - (iqStreakCount % 5);
     const flameScale = 1 + Math.min(iqStreakCount, 100) * 0.009;
     ui['iq-streak-count'].textContent = String(iqStreakCount);
     ui['iq-streak-fill'].style.width = `${progress}%`;
