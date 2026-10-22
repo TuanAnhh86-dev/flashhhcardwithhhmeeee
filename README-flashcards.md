@@ -11,6 +11,7 @@
 - Lọc theo đề, phần thi, trạng thái; tìm theo số câu hoặc từ khóa.
 - Giao diện nền tối; lật thẻ bằng nút **Lật thẻ** hoặc phím `Space`; chuyển trước/sau, trộn thứ tự và chế độ tập trung.
 - Đánh dấu **Chưa nhớ** hoặc **Đã nhớ**; trạng thái, ghi chú và câu đang ôn được lưu trong bộ nhớ cục bộ. Mở lại hoặc refresh sẽ tiếp tục từ câu đang ôn trên bộ dữ liệu đó.
+- Nút **Ôn thẻ chưa nhớ** cạnh Test IQ mở toàn bộ thẻ đã đánh dấu **Chưa nhớ**; bộ lọc đề, phần thi và từ khóa sẽ được xóa trước khi ôn.
 - Nút **Reset trạng thái** đưa toàn bộ thẻ của bộ dữ liệu hiện tại về **Chưa học**, xóa màu Chưa nhớ/Đã nhớ và giữ lại ghi chú cùng đáp án đã sửa.
 - Khi đi tiếp sau thẻ cuối của cả hai đề, hoặc sau câu 200 của đề đang lọc riêng, ứng dụng hiện bảng tổng kết **Đã nhớ / Chưa nhớ / Chưa học** cho phạm vi vừa hoàn thành kèm hiệu ứng pháo hoa.
 - Đáp án bạn sửa cũng chỉ lưu trong bộ nhớ cục bộ trên trình duyệt hiện tại; chúng không tự ghi vào `questions.json` hay theo cùng khi deploy sang máy/trình duyệt khác.

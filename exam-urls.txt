@@ -1,0 +1,3 @@
+# Put one full exam URL on each line (up to 2). Lines starting with # are ignored.
+https://student.dtphanoi.i-school.vn/exercise/itest/67656/1170994
+https://student.dtphanoi.i-school.vn/exercise/itest/68619/1212758

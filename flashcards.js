@@ -16,7 +16,7 @@
     'mark-known','restart-session','fullscreen-toggle','study-layout','clear-filters','toast',
     'transcript-dialog','transcript-english','transcript-vietnamese','tun-image-dialog','audio-warning-button','completion-dialog',
     'completion-title','completion-summary','completion-status-body','completion-confetti','completion-restart','completion-iq-launch',
-    'start-iq-test','iq-test-dialog','iq-test-setup-view','iq-test-setup-title','iq-test-question-view','iq-test-results-view','iq-test-scope-label','iq-test-position',
+    'start-iq-test','review-unlearned','iq-test-dialog','iq-test-setup-view','iq-test-setup-title','iq-test-question-view','iq-test-results-view','iq-test-scope-label','iq-test-position',
     'iq-test-progress-label','iq-test-progress-fill','iq-test-question-body','iq-test-previous','iq-test-next',
     'iq-result-title','iq-result-summary','iq-result-body','iq-test-review','iq-test-retry',
   ].map(id => [id, document.getElementById(id)]));
@@ -338,7 +338,7 @@
     }
     if (!questionFiles.has(1) || !questionFiles.has(2)) {
       setDataStatus('Thư mục cần có exam-01/questions.json và exam-02/questions.json.', 'error');
-      showToast('Chưa thấy đủ questions.json của hai đề.', true);
+      showToast('Ch\u01b0a c\u00f3 th\u1ebb n\u00e0o \u0111\u01b0\u1ee3c \u0111\u00e1nh d\u1ea5u Ch\u01b0a nh\u1edb.');
       return;
     }
     try {
@@ -1039,6 +1039,19 @@
     });
     ui['fullscreen-toggle'].addEventListener('click', () => {
       setFocusMode(!ui['study-layout'].classList.contains('fullscreen-mode'));
+    });
+    ui['review-unlearned'].addEventListener('click', () => {
+      const reviewCount = records.filter(card => statusOf(card) === 'review').length;
+      if (!reviewCount) {
+        showToast('Ch\u01b0a c\u00f3 th\u1ebb n\u00e0o \u0111\u01b0\u1ee3c \u0111\u00e1nh d\u1ea5u Ch\u01b0a nh\u1edb.');
+        return;
+      }
+      ui['exam-filter'].value = 'all';
+      ui['part-filter'].value = 'all';
+      ui['search-input'].value = '';
+      resumeCardKey = '';
+      setStatusFilter('review');
+      showToast(`\u0110ang \u00f4n l\u1ea1i ${reviewCount} th\u1ebb Ch\u01b0a nh\u1edb.`);
     });
     ui['front-content'].addEventListener('dblclick', toggleImageFullscreen);
     ui['back-content'].addEventListener('dblclick', toggleImageFullscreen);

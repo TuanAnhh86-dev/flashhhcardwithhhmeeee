@@ -25,6 +25,7 @@
 .completion-content{z-index:3}
 .completion-iq-launch{height:35px;padding:0 13px;border:1px solid #527894;border-radius:6px;background:#263b49;color:#e6f5ff;font-size:10px;font-weight:700}.completion-iq-launch:hover{background:#304d5e}
 .iq-test-launch{border-color:#4e6980;color:#b9ddf4}.iq-test-launch:hover{background:#1e2b34;border-color:#7398b5;color:#e0f2ff}
+.review-unlearned-launch{border-color:#6c6942;color:#f0d77c}.review-unlearned-launch:hover{background:#302d20;border-color:#a79952;color:#ffeb9e}
 .iq-test-dialog{width:min(900px,calc(100vw - 26px));max-width:none;max-height:calc(100vh - 26px);padding:0;overflow:auto;border:1px solid #42657c;border-radius:14px;background:#191b18;color:#eceee7;box-shadow:0 24px 80px #000b}
 .iq-test-dialog::backdrop{background:#070806d1;backdrop-filter:blur(4px)}
 .iq-test-setup-copy{margin:15px 0 12px;color:#bfc4c7;font-size:11px}.iq-test-scope-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:15px}.iq-test-scope-choice{display:flex;min-height:100px;flex-direction:column;justify-content:center;gap:7px;padding:14px;border:1px solid #3d454a;border-radius:8px;background:#20231f;color:#e4e8e1;text-align:left;transition:background .15s,border-color .15s,transform .15s}.iq-test-scope-choice:hover{transform:translateY(-2px);border-color:#6a9bb8;background:#202d35}.iq-test-scope-choice strong{font:700 14px Manrope,sans-serif;color:#dff1fc}.iq-test-scope-choice span{font-size:10px;line-height:1.5;color:#aeb5b5}
