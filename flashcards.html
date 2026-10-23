@@ -8,13 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="flashcards.css?v=20261022-iq-streak1">
+  <link rel="stylesheet" href="flashcards.css?v=20261023-flame4">
   <script>
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-      navigator.serviceWorker.register('./service-worker.js?v=20261023-iq-sounds2').catch(() => {});
+      navigator.serviceWorker.register('./service-worker.js?v=20261023-flame4').catch(() => {});
     }
   </script>
-  <script src="flashcards.js?v=20261023-iq-sounds2" defer></script>
+  <script src="flashcards.js?v=20261023-iq-sounds5" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -36,7 +36,19 @@
         </div>
         <div class="heading-tool-stack">
           <div class="streak-meter" id="iq-streak-meter" data-tier="green" role="status" aria-live="polite" aria-label="Test IQ đạt 100% liên tiếp: 0" title="Đạt 100% để tăng bộ đếm. Màu lửa đổi sau mỗi 5 lần.">
-            <span class="streak-flame" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path class="streak-flame-outer" d="M17.6 2c.6 4.8-1.4 7.4-4.7 10.2C10.3 8.8 9.3 6.1 9.7 3.4 5.1 8 3 12 3 17.4 3 24 7.8 29 14 29s11-4.8 11-11.2C25 11.5 22.8 6.1 17.6 2Z"/><path class="streak-flame-inner" d="M14.2 16.5c2.5-1.8 3.6-3.5 3.4-5.8 2.4 2.4 3.7 4.5 3.7 7 0 3.2-2.1 5.5-5.3 5.5-2.8 0-4.9-2.1-4.9-4.9 0-1.9 1-3.5 3.1-5.2Z"/></svg></span>
+            <span class="streak-flame" aria-hidden="true"><svg viewBox="0 0 48 56" focusable="false">
+              <defs>
+                <linearGradient id="streak-outer-gradient" x1=".5" y1="1" x2=".5" y2="0"><stop offset="0" stop-color="#c72b1c"/><stop offset=".34" stop-color="#f04a18"/><stop offset=".72" stop-color="#ff9d22"/><stop offset="1" stop-color="#ffe8a0"/></linearGradient>
+                <linearGradient id="streak-lobe-gradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#bd241b"/><stop offset=".58" stop-color="#f35a1a"/><stop offset="1" stop-color="#ffd05b"/></linearGradient>
+                <linearGradient id="streak-inner-gradient" x1=".5" y1="1" x2=".5" y2="0"><stop offset="0" stop-color="#fff0a0"/><stop offset=".58" stop-color="#ffd04a"/><stop offset="1" stop-color="#ff7c20"/></linearGradient>
+                <radialGradient id="streak-heart-gradient" cx="48%" cy="70%"><stop offset="0" stop-color="#fffef4"/><stop offset=".58" stop-color="#fff6c8"/><stop offset="1" stop-color="#ffe06a"/></radialGradient>
+              </defs>
+              <path class="streak-flame-outer" d="M25.4 2C30 10.4 25.8 15.5 22.3 20.7c-.4-3.8 1-7.6 1.8-10.3-6.3 4.8-10.8 10.7-13.1 16-2.3 5.3-2.5 12.7.7 18.7 2.8 5.2 7.4 8.3 12.8 8.3 9.7 0 15.9-7.6 15.9-17.3C40.4 25.1 33.5 12.2 25.4 2Z"/>
+              <path class="streak-flame-lobe" d="M29.8 15.5c5.4 6.6 8.5 11.9 8 17.7-.4 3.9-2.4 6.5-5 8.4 1.5-5.8-1-9.6-4-12.7 1.4-3.3 1.8-7.6 1-13.4Z"/>
+              <path class="streak-flame-inner" d="M24 47.2c-5.5 0-9.4-4-9.4-9.5 0-4.2 2.7-7.4 5.9-10.6-.3 4 1 6.6 3.4 8.3 2.3-3 3.2-6.1 2.5-9.9 4.8 4.7 7.7 8.7 7.7 13 0 5.2-4.1 8.7-10.1 8.7Z"/>
+              <path class="streak-flame-heart" d="M24.3 44.2c-2.9 0-5-2.2-5-5.1 0-2.4 1.7-4.2 3.8-6.4.2 2.3 1.1 3.5 2.1 4.4.9-1.2 1.4-2.6 1.3-4 1.9 2 2.7 3.8 2.7 5.6 0 3.3-2.1 5.5-4.9 5.5Z"/>
+              <circle class="streak-ember streak-ember-one" cx="10.4" cy="25.5" r="1.05"/><circle class="streak-ember streak-ember-two" cx="36.1" cy="22.8" r=".85"/>
+            </svg></span>
             <span class="streak-copy"><span class="streak-copy-top"><small>Có trình 0 ?</small><strong id="iq-streak-count">0</strong></span><span class="streak-track" aria-hidden="true"><i id="iq-streak-fill"></i></span></span>
           </div>
           <div class="heading-tools">

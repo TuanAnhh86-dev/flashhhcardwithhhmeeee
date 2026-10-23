@@ -1,11 +1,11 @@
 const CACHE_PREFIX = 'lcms-flashcards-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v5`;
+const CACHE_NAME = `${CACHE_PREFIX}v10`;
 const SHELL_FILES = [
   './',
   './index.html',
   './flashcards.html',
-  './flashcards.css?v=20261022-iq-streak1',
-  './flashcards.js?v=20261023-iq-sounds2',
+  './flashcards.css?v=20261023-flame4',
+  './flashcards.js?v=20261023-iq-sounds5',
 ];
 
 function scopedUrl(path) {

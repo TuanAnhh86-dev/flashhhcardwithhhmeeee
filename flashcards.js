@@ -39,6 +39,7 @@
   let previousIqTestKeys = '';
   let iqStreakCount = loadIqStreak();
   let uiSoundContext = null;
+  let streakEffectTimer;
   let toastTimer;
 
   function decodeHtmlEntities(value) {
@@ -87,7 +88,7 @@
     } catch { return false; }
   }
 
-  function updateIqStreakMeter(celebrate = false) {
+  function updateIqStreakMeter(effect = '') {
     const meter = ui['iq-streak-meter'];
     if (!meter) return;
     const tiers = ['green', 'yellow', 'red', 'purple', 'blue'];
@@ -99,6 +100,8 @@
     ui['iq-streak-fill'].style.width = `${progress}%`;
     meter.dataset.tier = tiers[tierIndex];
     meter.style.setProperty('--flame-scale', flameScale.toFixed(2));
+    meter.style.setProperty('--flame-flicker-low', (flameScale * 0.94).toFixed(2));
+    meter.style.setProperty('--flame-flicker-high', (flameScale * 1.05).toFixed(2));
     meter.style.setProperty('--flame-burst-scale', (flameScale * 1.3).toFixed(2));
     meter.style.setProperty('--flame-rebound-scale', (flameScale * 1.13).toFixed(2));
     meter.style.setProperty('--spark-scale', (0.65 + Math.min(1, iqStreakCount / 50) * 0.55).toFixed(2));
@@ -106,11 +109,13 @@
     meter.style.setProperty('--flame-blur', `${(4 + Math.min(iqStreakCount, 50) * 0.1).toFixed(1)}px`);
     meter.setAttribute('aria-label', `Test IQ đạt 100% liên tiếp: ${iqStreakCount}. Còn ${toNextColor} lần đạt 100% để đổi màu lửa.`);
     meter.title = `${iqStreakCount} lần đạt 100% liên tiếp · Bài dưới 100% sẽ ngắt streak · Còn ${toNextColor} lần đạt 100% để đổi màu lửa.`;
-    if (celebrate) {
-      meter.classList.remove('is-celebrating');
+    if (effect) {
+      const effectClass = effect === 'broken' ? 'is-breaking' : 'is-celebrating';
+      clearTimeout(streakEffectTimer);
+      meter.classList.remove('is-celebrating', 'is-breaking');
       void meter.offsetWidth;
-      meter.classList.add('is-celebrating');
-      setTimeout(() => meter.classList.remove('is-celebrating'), 900);
+      meter.classList.add(effectClass);
+      streakEffectTimer = setTimeout(() => meter.classList.remove(effectClass), effect === 'broken' ? 1150 : 1250);
     }
   }
 
@@ -174,6 +179,12 @@
 
       if (kind === 'answer') {
         scheduleTone(760, 0, 0.095, 0.04, 'triangle', 430);
+      } else if (kind === 'complete') {
+        [523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => {
+          const delay = [0, 0.085, 0.17, 0.29][index];
+          scheduleTone(frequency, delay, 0.2, 0.032);
+          scheduleTone(frequency * 2, delay, 0.15, 0.007);
+        });
       } else {
         [523.25, 659.25, 783.99].forEach((frequency, index) => {
           scheduleTone(frequency, index * 0.075, 0.16, 0.026);
@@ -982,7 +993,8 @@
       const saved = saveIqStreak();
       iqTest.resultProcessed = true;
       iqTest.streakResult = { perfect, previousStreak, saved };
-      updateIqStreakMeter(perfect);
+      updateIqStreakMeter(perfect ? 'perfect' : previousStreak > 0 ? 'broken' : '');
+      playQuizSound('complete');
       if (perfect) showToast(`Hoàn hảo! Bạn đạt 100% · Chuỗi ${iqStreakCount} 🔥`);
       else if (previousStreak > 0) showToast('Chuỗi hoàn hảo đã về 0. Làm đúng 100% để bắt đầu lại.');
     }
