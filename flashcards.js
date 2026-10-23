@@ -38,6 +38,7 @@
   let iqReviewSubset = null;
   let previousIqTestKeys = '';
   let iqStreakCount = loadIqStreak();
+  let uiSoundContext = null;
   let toastTimer;
 
   function decodeHtmlEntities(value) {
@@ -146,6 +147,42 @@
     ui.toast.className = `toast show${error ? ' error' : ''}`;
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { ui.toast.className = 'toast'; }, 2200);
+  }
+
+  function playQuizSound(kind) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    try {
+      uiSoundContext ||= new AudioContextClass();
+      if (uiSoundContext.state === 'suspended') void uiSoundContext.resume().catch(() => {});
+      const now = uiSoundContext.currentTime;
+      const scheduleTone = (frequency, delay, duration, volume, type = 'sine', endFrequency = frequency) => {
+        const start = now + delay;
+        const oscillator = uiSoundContext.createOscillator();
+        const gain = uiSoundContext.createGain();
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, start);
+        if (endFrequency !== frequency) oscillator.frequency.exponentialRampToValueAtTime(endFrequency, start + duration);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume * 1.5, start + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        oscillator.connect(gain);
+        gain.connect(uiSoundContext.destination);
+        oscillator.start(start);
+        oscillator.stop(start + duration + 0.015);
+      };
+
+      if (kind === 'answer') {
+        scheduleTone(760, 0, 0.095, 0.04, 'triangle', 430);
+      } else {
+        [523.25, 659.25, 783.99].forEach((frequency, index) => {
+          scheduleTone(frequency, index * 0.075, 0.16, 0.026);
+          scheduleTone(frequency * 2, index * 0.075, 0.12, 0.006);
+        });
+      }
+    } catch {
+      // Audio is optional; keep quiz controls working if the browser blocks Web Audio.
+    }
   }
 
   function partForQuestion(card) {
@@ -912,6 +949,7 @@
       }
       button.addEventListener('click', () => {
         iqTest.answers[questionKey(card)] = option.letter;
+        playQuizSound('answer');
         for (const choice of choiceList.querySelectorAll('.iq-answer-option')) {
           const isSelected = choice === button;
           choice.classList.toggle('is-selected', isSelected);
@@ -1099,6 +1137,7 @@
       if (!iqTest.answers[questionKey(card)]) return;
       if (iqTest.index === iqTest.questions.length - 1) renderIqResults();
       else {
+        playQuizSound('next');
         iqTest.index += 1;
         renderIqQuestion();
       }
