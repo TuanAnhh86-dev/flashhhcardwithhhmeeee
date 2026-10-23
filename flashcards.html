@@ -8,13 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="flashcards.css?v=20261023-flame4">
+  <link rel="stylesheet" href="flashcards.css?v=20261023-streak-growth1">
   <script>
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-      navigator.serviceWorker.register('./service-worker.js?v=20261023-flame4').catch(() => {});
+      navigator.serviceWorker.register('./service-worker.js?v=20261023-streak-growth1').catch(() => {});
     }
   </script>
-  <script src="flashcards.js?v=20261023-iq-sounds5" defer></script>
+  <script src="flashcards.js?v=20261023-streak-growth1" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -38,8 +38,8 @@
           <div class="streak-meter" id="iq-streak-meter" data-tier="green" role="status" aria-live="polite" aria-label="Test IQ đạt 100% liên tiếp: 0" title="Đạt 100% để tăng bộ đếm. Màu lửa đổi sau mỗi 5 lần.">
             <span class="streak-flame" aria-hidden="true"><svg viewBox="0 0 48 56" focusable="false">
               <defs>
-                <linearGradient id="streak-outer-gradient" x1=".5" y1="1" x2=".5" y2="0"><stop offset="0" stop-color="#c72b1c"/><stop offset=".34" stop-color="#f04a18"/><stop offset=".72" stop-color="#ff9d22"/><stop offset="1" stop-color="#ffe8a0"/></linearGradient>
-                <linearGradient id="streak-lobe-gradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#bd241b"/><stop offset=".58" stop-color="#f35a1a"/><stop offset="1" stop-color="#ffd05b"/></linearGradient>
+                <linearGradient id="streak-outer-gradient" x1=".5" y1="1" x2=".5" y2="0"><stop offset="0" stop-color="#fff1a4"/><stop offset=".28" stop-color="#ff9b24"/><stop offset=".66" style="stop-color:var(--streak-fire-mid,#50dd81)"/><stop offset="1" style="stop-color:var(--streak-fire-tip,#d5ff9c)"/></linearGradient>
+                <linearGradient id="streak-lobe-gradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ed451d"/><stop offset=".62" style="stop-color:var(--streak-fire-mid,#50dd81)"/><stop offset="1" style="stop-color:var(--streak-fire-tip,#d5ff9c)"/></linearGradient>
                 <linearGradient id="streak-inner-gradient" x1=".5" y1="1" x2=".5" y2="0"><stop offset="0" stop-color="#fff0a0"/><stop offset=".58" stop-color="#ffd04a"/><stop offset="1" stop-color="#ff7c20"/></linearGradient>
                 <radialGradient id="streak-heart-gradient" cx="48%" cy="70%"><stop offset="0" stop-color="#fffef4"/><stop offset=".58" stop-color="#fff6c8"/><stop offset="1" stop-color="#ffe06a"/></radialGradient>
               </defs>
